@@ -12,8 +12,8 @@ def crearJWT(response, datos):
     duracion_validez_token = datetime.timedelta(hours=1)
     fecha_expiracion = datetime.datetime.utcnow() + duracion_validez_token
 
-    token_payload = {'usuario': datos['usuario'],
-                     "rol": datos['rol'], 'exp': fecha_expiracion}
+    token_payload = {"codUsuario": datos['codigoUsuario'], "carnet": datos['carnet'],
+                     'usuario': datos['usuario'], 'exp': fecha_expiracion}
 
     token = jwt.encode(token_payload, secret_key, algorithm='HS256')
 

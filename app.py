@@ -2,10 +2,12 @@ from functools import wraps
 from flask import Flask, jsonify, request
 from config import MongoDBConnection
 from models.Evento import Evento
+from flask_cors import CORS
 from controllers.controllerUsuarios import *
 from middlewares.auth_middleware import *
 
 app = Flask(__name__)
+CORS(app, origins='*')
 mongo_connection = MongoDBConnection(
     host="146.190.214.220",
     port=27017,
@@ -33,13 +35,14 @@ def gestionar_evento(ev=None):
             data = request.get_json()
             evento = Evento(
                 db,
-                data['cod_evento'],
-                data['tipoEvento'],
-                data['nombreEvento'],
-                data['fechaEvento'],
-                data['descripcionEvento'],
-                data['cod_admin'],
-                data['imgURL']
+                cod_evento=data['codigoEvento'],
+                tipoEvento=data['tipo'],
+                nombreEvento=data['nombre'],
+                fechaEvento=data['fecha'],
+                descripcionEvento=data['descripcion'],
+                cod_admin=data['codigoAdmin'],
+                hora=data['hora'],
+                imgURL=data['imgURL']
             )
             msg, insertedID = evento.crearEvento()
             return jsonify({"msg": msg, "id": str(insertedID)})
@@ -47,14 +50,14 @@ def gestionar_evento(ev=None):
         elif request.method == 'DELETE':
             data = request.get_json()
             evento = Evento(db=db)
-            deleted_count = evento.borrarEvento(data["cod_evento"])
+            deleted_count = evento.borrarEvento(data["codigoEvento"])
             return jsonify({"msg": f"{str(deleted_count)} Elementos Eliminados"})
 
         elif request.method == 'PUT':
             data = request.get_json()
             evento = Evento(db=db)
             edited_count = evento.editarEvento(
-                cod_evento=data["cod_evento"], nuevos_valores=data["nuevos_datos"]
+                codigoEvento=data["codigoEvento"], nuevos_valores=data["nuevos_datos"]
             )
             return jsonify({"msg": f"{str(edited_count)} Elementos Editados"})
     finally:
@@ -76,7 +79,7 @@ def handler_cliente(cliente_id=None):
         elif request.method == 'PUT':
             data = request.get_json()
             edited_count = editarDatosUsuario(
-                data["ci"], data["nuevos_valores"], db)
+                data["carnet"], data["nuevos_valores"], db)
             return jsonify({"msg": f"{str(edited_count)} Elementos Editados"})
 
         elif request.method == 'GET':
@@ -92,7 +95,7 @@ def handler_cliente(cliente_id=None):
 
         elif request.method == 'DELETE':
             data = request.get_json()
-            deleted_count = eliminarUsuario(data['ci'], db)
+            deleted_count = eliminarUsuario(data['carnet'], db)
             return jsonify({"msg": f"{str(deleted_count)} Elementos Eliminados"})
     finally:
         mongo_connection.disconnect()

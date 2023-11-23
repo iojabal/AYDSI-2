@@ -1,10 +1,11 @@
 class Boleto:
-    def __init__(self, precio, clase_boleto, Numero_asiento, palco, evento):
-        self.precio = precio
-        self.clase_boleto = clase_boleto
-        self.Numero_asiento = Numero_asiento
-        self.palco = palco
-        self.evento = evento
+    def __init__(self, codigoBoleto, numeroIngresos, codigoSector, codigoEvento, codigoPago, CIUsuario):
+        self.codigoBoleto = codigoBoleto
+        self.numeroIngresos = numeroIngresos
+        self.codigoSector = codigoSector
+        self.codigoEvento = codigoEvento
+        self.codigoPago = codigoPago
+        self.CIUsuario = CIUsuario
 
     def obtener_precio(self):
         return self.precio

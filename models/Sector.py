@@ -1,16 +1,17 @@
 class Sector:
-    def __init__(self, Codigo_sector, Nombre_sector, Cantidad_asientos):
-        self.Codigo_sector = Codigo_sector
-        self.Nombre_sector = Nombre_sector
-        self.Cantidad_asientos = Cantidad_asientos
-        self.precioSector = 0
-        self.habilitado = False
-        self.posicion = None
-        self.CodigoEvento = None
+    def __init__(self, Codigo_sector, Nombre_sector, Cantidad_asientos, cantidadOcupantes, precioSector, habilitado, posicionDefecto, codigoEvento):
+        self.codigoSector = Codigo_sector
+        self.Nombre = Nombre_sector
+        self.capacidadMaxima = Cantidad_asientos
+        self.cantidadOcupantes = cantidadOcupantes
+        self.precioSector = precioSector
+        self.comprasMaximas = 0
+        self.codigoEvento = codigoEvento
+        self.habilitado = habilitado
+        self.posicionDefecto = posicionDefecto
 
     def marcarOcupado(self):
         pass
 
     def marcarDesocupado(self):
-
         pass
