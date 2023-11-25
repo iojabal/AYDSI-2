@@ -4,6 +4,8 @@ from config import MongoDBConnection
 from models.Evento import Evento
 from flask_cors import CORS
 from controllers.controllerUsuarios import *
+from controllers.controllerPago import *
+from controllers.controllerBoleto import *
 from middlewares.auth_middleware import *
 
 app = Flask(__name__)
@@ -134,6 +136,30 @@ def logout():
     response.delete_cookie('session')
 
     return response
+
+
+@app.route("/api/pago", methods=["POST"])
+def handler_pago():
+    db = mongo_connection.connect()
+    try:
+        if request.method == "POST":
+            data = request.get_json()
+            msg, id = crearPago(data, db)
+            return jsonify({"msg": msg, "id": str(id)})
+    finally:
+        mongo_connection.disconnect()
+
+
+@app.route("/api/boleto", methods=["POST"])
+def handler_boleto():
+    db = mongo_connection.connect()
+    try:
+        if request.method == "POST":
+            data = request.get_json()
+            msg, id = crearBoleto(data, db)
+            return jsonify({"msg": msg, "id": str(id)})
+    finally:
+        mongo_connection.disconnect()
 
 
 if __name__ == '__main__':
