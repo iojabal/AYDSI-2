@@ -5,8 +5,10 @@ from models.Evento import Evento
 from flask_cors import CORS
 from controllers.controllerUsuarios import *
 from controllers.controllerPago import *
+from controllers.controllerSectores import *
 from controllers.controllerBoleto import *
 from middlewares.auth_middleware import *
+
 
 app = Flask(__name__)
 CORS(app, origins='*')
@@ -158,6 +160,39 @@ def handler_boleto():
             data = request.get_json()
             msg, id = crearBoleto(data, db)
             return jsonify({"msg": msg, "id": str(id)})
+    finally:
+        mongo_connection.disconnect()
+
+
+@app.route("/api/sector", methods=["POST", "GET", "PUT", "DELETE"])
+def handler_sector():
+    db = mongo_connection.connect()
+    db = mongo_connection.connect()
+    try:
+        if request.method == "POST":
+            data = request.get_json()
+            msg, id = crearSector(data, db)
+            return jsonify({"msg": msg, "id": str(id)})
+            # return crearJWT(jsonify({"msg": msg, "id": str(id)}), datos=data)
+
+        elif request.method == 'PUT':
+            data = request.get_json()
+            edited_count = editarDatosSector(
+                data["codigoSector"], data["nuevos_valores"], db)
+            return jsonify({"msg": f"{str(edited_count)} Elementos Editados"})
+
+        elif request.method == 'GET':
+            try:
+                data = request.get_json()
+                clientes = mostrarSectores(db, data)
+            except:
+                clientes = mostrarSectores(db)
+            return jsonify(clientes)
+
+        elif request.method == 'DELETE':
+            data = request.get_json()
+            deleted_count = eliminarSector(data['codigoSector'], db)
+            return jsonify({"msg": f"{str(deleted_count)} Elementos Eliminados"})
     finally:
         mongo_connection.disconnect()
 
